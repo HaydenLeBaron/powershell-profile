@@ -1,0 +1,74 @@
+## 
+## Author: Hayden LeBaron
+## Date: 05/07/2020
+##
+
+
+#--------------------------------------------------------------------
+# FUNCTIONS
+#--------------------------------------------------------------------
+
+
+# Opens this file in vim
+function Edit-Profile {vim $PROFILE.AllUsersAllHosts}
+
+
+# Useful shortcuts for traversing directories (https://gist.github.com/timsneath/profile.ps1)
+function cd...  { cd ..\.. }
+function cd.... { cd ..\..\.. }
+
+
+# (https://gist.github.com/timsneath/profile.ps1)
+# Simple function to start a new elevated process. If arguments are supplied then 
+# a single command is started with admin rights; if not then a new admin instance
+# of PowerShell is started.
+function admin
+{
+    if ($args.Count -gt 0)
+    {   
+       $argList = "& '" + $args + "'"
+       Start-Process "$psHome\powershell.exe" -Verb runAs -ArgumentList $argList
+    }
+    else
+    {
+       Start-Process "$psHome\powershell.exe" -Verb runAs
+    }
+}
+
+
+
+#--------------------------------------------------------------------
+# SHORTCUT ALIASES
+#--------------------------------------------------------------------
+
+
+# ssh into my AWS sever
+function SSH-Stardust {
+    ssh hayden@44.228.167.255
+}
+
+# Alias for quick ssh into my AWS server
+New-Alias -Name sshstardust -Value SSH-Stardust
+
+# Shows navigable menu of all options when hitting Tab
+Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+
+# Autocompletion for arrow keys
+Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
+Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
+
+
+#--------------------------------------------------------------------
+# UNIX-LIKE SHELL TWEAKS
+#--------------------------------------------------------------------
+
+# Set UNIX-like aliases for the admin command, so sudo <command> will run the command
+# with elevated rights. 
+Set-Alias -Name su -Value admin
+Set-Alias -Name sudo -Value admin
+
+
+function cat { Get-Content $args }
+
+
+
